@@ -1,6 +1,19 @@
 import React, {Component} from 'react';
 import {createContainer} from 'meteor/react-meteor-data';
-import {Button, Table, Grid, Row, Panel, Col, FormControl, FormGroup, Form, ControlLabel} from 'react-bootstrap';
+import {
+    Button,
+    Table,
+    Tabs,
+    Tab,
+    Grid,
+    Row,
+    Panel,
+    Col,
+    FormControl,
+    FormGroup,
+    Form,
+    ControlLabel
+} from 'react-bootstrap';
 
 import * as Transactions from '../api/db/transactions.js';
 
@@ -17,6 +30,79 @@ class App extends Component {
             <Grid>
                 <Row>
                     <Col xs={12}>
+                        <Panel header="Add User">
+
+                            <Form>
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        Name
+                                    </Col>
+                                    <Col sm={10}>
+                                        <FormControl type="text" placeholder={'Name'}/>
+                                    </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        Description
+                                    </Col>
+                                    <Col sm={10}>
+                                        <FormControl type="text" placeholder={'Description'}/>
+                                    </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        E-Mail
+                                    </Col>
+                                    <Col sm={10}>
+                                        <FormControl type="text"/>
+                                    </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        Bitcoin
+                                    </Col>
+                                    <Col sm={5}>
+                                        <FormControl type="text" placeholder={'ID'}/>
+                                    </Col>
+                                    <Col sm={1}>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <FormControl type="text" placeholder={'Amount'}/>
+                                    </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        Ethereum
+                                    </Col>
+                                    <Col sm={5}>
+                                        <FormControl type="text" placeholder={'ID'}/>
+                                    </Col>
+                                    <Col sm={1}>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <FormControl type="text" placeholder={'Amount'}/>
+                                    </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Col sm={2} componentClass={ControlLabel}>
+                                        Transaction Limit
+                                    </Col>
+                                    <Col sm={10}>
+                                        <FormControl type="text"/>
+                                    </Col>
+                                </FormGroup>
+
+                                <Button bsStyle="primary" type="submit">
+                                    Add User
+                                </Button>
+                            </Form>
+
+                        </Panel>
                     </Col>
                 </Row>
 
