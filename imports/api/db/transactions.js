@@ -1,5 +1,6 @@
 import {Mongo} from 'meteor/mongo';
 import moment from 'moment';
+import {check} from 'meteor/check';
 import {Meteor} from 'meteor/meteor';
 import * as Users from "./users.js";
 
@@ -10,7 +11,7 @@ export function getAll() {
 }
 
 export function get(id) {
-    return Transactions.find({_id: id}).fetch();
+    return Transactions.findOne({_id: id});
 }
 
 export const STATE = {
@@ -25,52 +26,55 @@ export const STATE = {
 const transactionsToProcess = [];
 
 export function add(transaction) {
-    const sourceUserId = transaction.sourceUserId;
-    const targetUserId = transaction.targetUserId;
-    const currencyType = transaction.currencyType;
-    const currencyAmount = parseFloat(transaction.currencyAmount);
+    check(transaction.from, String);
+    check(transaction.to, String);
+    check(transaction.amount, String);
+    check(transaction.currency, String);
+
+    const from = transaction.from;
+    const to = transaction.to;
+    const amount = parseFloat(transaction.amount);
+    const currency = transaction.currency;
+
+    if ((currency !== 'BTC' && currency !== 'ETH')
+        || amount <= 0) {
+        throw new Meteor.Error('500', 'Data types not valid');
+    }
 
     Transactions.insert(
         {
-            sourceUserId,
-            targetUserId,
-            currencyType,
-            currencyAmount,
+            from,
+            to,
+            amount,
+            currency,
             timestampProcessed: null,
             timestampCreated: moment(),
             state: STATE.SUBMITTED
         },
-        function(err) {
+        function(err, res) {
             // In case the initial insert has failed, we cannot even set a nice state
             if (err) {
-                throw Meteor.Error('Unsubmitted Transaction')
+                throw Meteor.Error('Unsubmitted Transaction');
             } else {
-                transactionsToProcess.push(transaction._id);
-                setTimeout(_processTransaction, 2500);
+                transactionsToProcess.push(res);
+                Meteor.setTimeout(_processTransaction, 2500);
             }
         }
     );
 }
 
-function _processTransaction() {
-    const id = transactionsToProcess.shift();
-    const t = get(id);
+function _invalidateTransaction(id) {
+    Transactions.update({
+        _id: id
+    }, {
+        $set: {
+            timestampProcessed: moment(),
+            state: STATE.INVALID
+        }
+    });
+}
 
-    if (t.currencyAmount <= 0
-        || !Users.isValid(t.sourceUserId)
-        || (t.currencyType !== 'BTC' && t.currencyType !== 'ETH')
-        || !Users.hasFunds(t.currencyAmount, t.currencyType)) {
-
-        Transactions.update({
-            _id: id
-        }, {
-            $set: {
-                timestampProcessed: moment(),
-                state: STATE.INVALID
-            }
-        });
-    }
-
+function _finaliseTransaction(id) {
     Transactions.update({
         _id: id
     }, {
@@ -79,4 +83,38 @@ function _processTransaction() {
             state: STATE.DONE
         }
     });
+}
+
+function _processTransaction() {
+    const id = transactionsToProcess.shift();
+    const t = get(id);
+
+    const userFrom = Users.getUserByName(t.from);
+
+    if (t.currency === 'BTC') {
+        if (userFrom.bitcoinAmount < t.amount) {
+            _invalidateTransaction(id);
+        }
+    } else if (t.currency === 'ETH') {
+        if (userFrom.ethereumAmount < t.amount) {
+            _invalidateTransaction(id);
+        }
+    }
+
+    Users.changeFunds(t.from, t.currency, -t.amount,
+        (e, r) => {
+            if (e) {
+                _invalidateTransaction(id);
+            } else {
+                Users.changeFunds(t.to, t.currency, t.amount,
+                    (e, r) => {
+                        if (e) {
+                            _invalidateTransaction(id);
+                        } else {
+                            _finaliseTransaction(id);
+                        }
+                    });
+            }
+        });
+
 }
