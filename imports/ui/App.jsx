@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Button, Table, Grid, Row, Panel, Col, FormControl, FormGroup, Form, ControlLabel} from 'react-bootstrap';
 
