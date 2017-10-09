@@ -8,36 +8,39 @@ export class History extends Component {
         super(props);
 
         this.state = {
-            transactions: this.props.transactions,
             filter: ""
         };
     }
 
     filterTransactions(e) {
-        const userId = e.target.value;
-
-        this.setState(function(prevState, props) {
-            return {
-                transactions: prevState.transactions.filter(t => t.id === userId)
-            }
+        this.setState({
+            filter: e.target.value
         });
-
     }
 
     render() {
+
+        const filter = this.state.filter;
+        const transactions = this.props.transactions.filter(function(t) {
+            if (filter !== '') {
+                return t.from === filter || t.to === filter;
+            }
+            return true;
+        });
+
         return (
 
             <Panel header="History">
                 <Form horizontal>
                     <FormGroup>
                         <Col sm={1} componentClass={ControlLabel}>
-                            User ID
+                            Username
                         </Col>
                         <Col sm={11}>
                             <FormControl type="text"
                                          value={this.state.filter}
-                                         placeholder={'OWN USER ID'}
-                                         onChange={this.filterTransactions}/>
+                                         placeholder={'Username'}
+                                         onChange={this.filterTransactions.bind(this)}/>
                         </Col>
                     </FormGroup>
                 </Form>
@@ -54,7 +57,7 @@ export class History extends Component {
                     </thead>
                     <tbody>
                     {
-                        this.state.transactions.map((t, i) => (
+                        transactions.map((t, i) => (
                             <Transaction key={i} {...t} />
                         ))
                     }

@@ -48,7 +48,7 @@ export function add(transaction) {
             amount,
             currency,
             timestampProcessed: null,
-            timestampCreated: moment(),
+            timestampCreated: moment().toDate(),
             state: STATE.SUBMITTED
         },
         function(err, res) {
@@ -68,7 +68,7 @@ function _invalidateTransaction(id) {
         _id: id
     }, {
         $set: {
-            timestampProcessed: moment(),
+            timestampProcessed: moment().toDate(),
             state: STATE.INVALID
         }
     });
@@ -79,7 +79,7 @@ function _finaliseTransaction(id) {
         _id: id
     }, {
         $set: {
-            timestampProcessed: moment(),
+            timestampProcessed: moment().toDate(),
             state: STATE.DONE
         }
     });

@@ -21,7 +21,7 @@ export class Transaction extends Component {
             <tr>
                 <td>{this.props.from}</td>
                 <td>{this.props.to}</td>
-                <td>{this.props.amount}</td>
+                <td>{this.props.amount.toFixed(8)}</td>
                 <td>{this.props.currency}</td>
                 <td><Label bsStyle={style}>{this.props.state}</Label></td>
             </tr>

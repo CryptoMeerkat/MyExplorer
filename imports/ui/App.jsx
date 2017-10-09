@@ -46,7 +46,7 @@ class App extends Component {
 
 export default createContainer(() => {
     const transactionHandle = Meteor.subscribe('transactions');
-    const transactions = Transactions.TransactionCollection.find({}).fetch() || [];
+    const transactions = Transactions.TransactionCollection.find({}, {sort: {timestampCreated: -1}}).fetch() || [];
     const loaded = transactionHandle.ready();
 
     return {
