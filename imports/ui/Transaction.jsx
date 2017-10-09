@@ -19,10 +19,10 @@ export class Transaction extends Component {
 
         return (
             <tr>
-                <td>{t.from}</td>
-                <td>{t.to}</td>
-                <td>{t.amount}</td>
-                <td>{t.currency}</td>
+                <td>{this.props.from}</td>
+                <td>{this.props.to}</td>
+                <td>{this.props.amount}</td>
+                <td>{this.props.currency}</td>
                 <td><Label bsStyle={style}>{this.props.state}</Label></td>
             </tr>
         );

@@ -4,14 +4,14 @@ import {check} from 'meteor/check';
 import {Meteor} from 'meteor/meteor';
 import * as Users from "./users.js";
 
-export const Transactions = new Mongo.Collection('transactions');
+export const TransactionCollection = new Mongo.Collection('transactions');
 
-export function getAll() {
-    return Transactions.find({}, {sort: {timestampCreated: -1}}).fetch();
+export function findAll() {
+    return TransactionCollection.find({});
 }
 
 export function get(id) {
-    return Transactions.findOne({_id: id});
+    return TransactionCollection.findOne({_id: id});
 }
 
 export const STATE = {
@@ -41,7 +41,7 @@ export function add(transaction) {
         throw new Meteor.Error('500', 'Data types not valid');
     }
 
-    Transactions.insert(
+    TransactionCollection.insert(
         {
             from,
             to,
@@ -64,7 +64,7 @@ export function add(transaction) {
 }
 
 function _invalidateTransaction(id) {
-    Transactions.update({
+    TransactionCollection.update({
         _id: id
     }, {
         $set: {
@@ -75,7 +75,7 @@ function _invalidateTransaction(id) {
 }
 
 function _finaliseTransaction(id) {
-    Transactions.update({
+    TransactionCollection.update({
         _id: id
     }, {
         $set: {

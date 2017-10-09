@@ -34,7 +34,9 @@ class App extends Component {
 
                 <Row>
                     <Col xs={12}>
-                        <History transactions={this.props.transactions}/>
+                        {!this.props.loaded ? null :
+                            <History transactions={this.props.transactions}/>
+                        }
                     </Col>
                 </Row>
             </Grid>
@@ -43,7 +45,12 @@ class App extends Component {
 }
 
 export default createContainer(() => {
+    const transactionHandle = Meteor.subscribe('transactions');
+    const transactions = Transactions.TransactionCollection.find({}).fetch() || [];
+    const loaded = transactionHandle.ready();
+
     return {
-        transactions: Transactions.getAll(),
+        transactions: transactions,
+        loaded: loaded
     };
 }, App);

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Table, Grid, Row, Panel, Col, FormControl, FormGroup, Form, ControlLabel} from 'react-bootstrap';
+import {Transaction} from './Transaction.jsx';
 
 export class History extends Component {
 
@@ -53,8 +54,8 @@ export class History extends Component {
                     </thead>
                     <tbody>
                     {
-                        this.state.transactions.map((t) => (
-                            <Transaction {...t} />
+                        this.state.transactions.map((t, i) => (
+                            <Transaction key={i} {...t} />
                         ))
                     }
                     </tbody>
