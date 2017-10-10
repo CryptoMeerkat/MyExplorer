@@ -1,5 +1,7 @@
 # MyExplorer
 
+![MyExplorer First Glance](MyExplorer.png)
+
 A JavaScript project with the stack Mongo, Meteor and React.
 Have a first glance here: https://www.youtube.com/watch?v=t7cu9TOkMrM
 
