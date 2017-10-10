@@ -36,11 +36,6 @@ export function add(transaction) {
     const amount = parseFloat(transaction.amount);
     const currency = transaction.currency;
 
-    if ((currency !== 'BTC' && currency !== 'ETH')
-        || amount <= 0) {
-        throw new Meteor.Error('500', 'Data types not valid');
-    }
-
     TransactionCollection.insert(
         {
             from,

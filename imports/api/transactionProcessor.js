@@ -36,7 +36,10 @@ export function processTransaction() {
             const userFrom = UsersAPI.getUserByName(t.from);
             const userTo = UsersAPI.getUserByName(t.to);
 
-            if (userFrom === undefined || userTo === undefined) {
+            if (userFrom === undefined
+                || userTo === undefined
+                || (t.currency !== 'BTC' && t.currency !== 'ETH')
+                || t.amount <= 0) {
                 _invalidateTransaction(id);
             } else {
 
