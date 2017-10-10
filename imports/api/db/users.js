@@ -33,7 +33,6 @@ export function changeFunds(name, currency, amount, cb) {
     }
 }
 
-
 export function addUser(details) {
     check(details.name, String);
     check(details.description, String);
@@ -65,7 +64,7 @@ export function addUser(details) {
         || ethereumAmount < 0
         || ethereumAmount > 1
         || transactionLimit < 0) {
-        throw new Meteor.Error('500', 'Data types not valid');
+        throw new Meteor.Error('500', 'Invalid values');
     }
 
     if (this.getUserByName(details.name) !== undefined) {

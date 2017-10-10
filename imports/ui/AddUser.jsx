@@ -41,7 +41,7 @@ export class AddUser extends React.Component {
                 this.setState({
                     details: Object.assign({}, this.clearUserDetails())
                 });
-                Alert.success('User add!');
+                Alert.success('User added!');
             }
         });
 
