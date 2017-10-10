@@ -23,20 +23,20 @@ export class History extends Component {
         const filter = this.state.filter;
         const transactions = this.props.transactions.filter(function(t) {
             if (filter !== '') {
-                return t.from === filter || t.to === filter;
+                return t.from.includes(filter) || t.to.includes(filter);
             }
             return true;
         });
 
         return (
 
-            <Panel header="History">
+            <Panel header={<strong>History</strong>}>
                 <Form horizontal>
                     <FormGroup>
-                        <Col sm={1} componentClass={ControlLabel}>
+                        <Col sm={2} componentClass={ControlLabel}>
                             Username
                         </Col>
-                        <Col sm={11}>
+                        <Col sm={10}>
                             <FormControl type="text"
                                          value={this.state.filter}
                                          placeholder={'Username'}

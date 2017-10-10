@@ -10,6 +10,7 @@ import * as Transactions from '../api/db/transactions.js';
 import {History} from './History.jsx';
 import {AddUser} from './AddUser.jsx';
 import {AddTransaction} from './AddTransaction.jsx';
+import Alert from 'react-s-alert';
 
 class App extends Component {
 
@@ -21,24 +22,22 @@ class App extends Component {
         return (
             <Grid>
                 <Row>
-                    <Col xs={12}>
-                        <AddUser/>
+                    <Col xs={5}>
+                        <Row>
+                            <AddUser/>
+                        </Row>
+                        <Row>
+                            <AddTransaction/>
+                        </Row>
                     </Col>
-                </Row>
-
-                <Row>
-                    <Col xs={12}>
-                        <AddTransaction/>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col xs={12}>
+                    <Col xs={7}>
                         {!this.props.loaded ? null :
                             <History transactions={this.props.transactions}/>
                         }
                     </Col>
                 </Row>
+
+                <Alert stack={{limit: 3}} html={false} effect='slide' position='top-right' timeout={3000}/>
             </Grid>
         );
     }

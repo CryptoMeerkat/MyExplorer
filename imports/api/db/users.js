@@ -21,12 +21,16 @@ export function changeFunds(name, currency, amount, cb) {
 
     const user = getUserByName(name);
 
-    return UsersCollection.update(
-        {name: name},
-        {$set: {[currencyProperty]: user[currencyProperty] + amount}},
-        {},
-        (e, r) => cb(e, r)
-    );
+    if (user[currencyProperty] + amount < 0) {
+        cb('Not enough funds', null);
+    } else {
+        UsersCollection.update(
+            {name: name},
+            {$set: {[currencyProperty]: user[currencyProperty] + amount}},
+            {},
+            (e, r) => cb(e, r)
+        );
+    }
 }
 
 

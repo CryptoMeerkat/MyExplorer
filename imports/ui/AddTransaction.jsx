@@ -6,20 +6,17 @@ import {
     FormControl,
     FormGroup,
     Form,
-    ControlLabel,
-    Alert
+    ControlLabel
 } from 'react-bootstrap';
 import {Meteor} from 'meteor/meteor';
+import Alert from 'react-s-alert';
 
 export class AddTransaction extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            details: this.clearTransactionDetails(),
-            error: false,
-            errorDetail: null,
-            success: false,
+            details: this.clearTransactionDetails()
         };
     }
 
@@ -35,15 +32,13 @@ export class AddTransaction extends React.Component {
     postTransaction() {
         Meteor.call('postTransaction', this.state.details, (e, r) => {
             if (e !== undefined) {
-                this.setState({
-                    error: true,
-                    errorDetail: e.reason
-                });
+                Alert.error('Transaction submitting failed. Error: ' + e.reason);
             } else {
                 this.setState({
-                    details: Object.assign({}, this.clearTransactionDetails()),
-                    success: true
+                    details: Object.assign({}, this.clearTransactionDetails())
                 });
+                Alert.success('Transaction posted!');
+
             }
         });
 
@@ -54,31 +49,23 @@ export class AddTransaction extends React.Component {
         details[e.target.id] = e.target.value;
 
         this.setState({
-            error: false,
-            success: false,
             details: details,
         });
     }
 
     render() {
+
+        const decriptionWidth = 3;
+        const fieldsWidth = 12 - decriptionWidth;
+
         return (
-            <Panel header="Add Transaction">
-                {!this.state.error ? null :
-                    <Alert bsStyle="danger">
-                        Transaction submitting failed Error: {JSON.stringify(this.state.errorDetail)}
-                    </Alert>
-                }
-                {!this.state.success ? null :
-                    <Alert bsStyle="success">
-                        Transaction posted!
-                    </Alert>
-                }
+            <Panel header={<strong>Add Transaction</strong>}>
                 <Form horizontal>
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             From
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          placeholder={'Username'}
                                          value={this.state.details.from}
@@ -88,10 +75,10 @@ export class AddTransaction extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             To
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          placeholder={'Username'}
                                          value={this.state.details.to}
@@ -101,10 +88,10 @@ export class AddTransaction extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Amount
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          value={this.state.details.amount}
                                          id='amount'
@@ -113,10 +100,10 @@ export class AddTransaction extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Currency
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl componentClass="select"
                                          value={this.state.details.currency}
                                          onChange={this.handleChange.bind(this)}>
@@ -126,7 +113,7 @@ export class AddTransaction extends React.Component {
                         </Col>
                     </FormGroup>
 
-                    <Button bsStyle="primary" onClick={this.postTransaction.bind(this)}>
+                    <Button block bsStyle="primary" onClick={this.postTransaction.bind(this)}>
                         Send
                     </Button>
                 </Form>

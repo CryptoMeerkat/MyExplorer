@@ -6,10 +6,10 @@ import {
     FormControl,
     FormGroup,
     Form,
-    ControlLabel,
-    Alert
+    ControlLabel
 } from 'react-bootstrap';
 import {Meteor} from 'meteor/meteor';
+import Alert from 'react-s-alert';
 
 export class AddUser extends React.Component {
 
@@ -17,9 +17,6 @@ export class AddUser extends React.Component {
         super(props);
         this.state = {
             details: this.clearUserDetails(),
-            error: false,
-            errorDetail: null,
-            success: false,
         };
     }
 
@@ -39,15 +36,12 @@ export class AddUser extends React.Component {
     addUser() {
         Meteor.call('addUser', this.state.details, (e, r) => {
             if (e !== undefined) {
-                this.setState({
-                    error: true,
-                    errorDetail: e.reason
-                });
+                Alert.error('User cannot be added. Error: ' + e.reason);
             } else {
                 this.setState({
-                    details: Object.assign({}, this.clearUserDetails()),
-                    success: true
+                    details: Object.assign({}, this.clearUserDetails())
                 });
+                Alert.success('User add!');
             }
         });
 
@@ -58,31 +52,24 @@ export class AddUser extends React.Component {
         details[e.target.id] = e.target.value;
 
         this.setState({
-            error: false,
-            success: false,
             details: details,
         });
     }
 
     render() {
+
+        const decriptionWidth = 3;
+        const fieldsWidth = 12 - decriptionWidth;
+        const fieldWidthHalf = fieldsWidth / 2 - 1;
+
         return (
-            <Panel header="Add User">
-                {!this.state.error ? null :
-                    <Alert bsStyle="danger">
-                        User cannot be added. Invalid data provided. Error: {JSON.stringify(this.state.errorDetail)}
-                    </Alert>
-                }
-                {!this.state.success ? null :
-                    <Alert bsStyle="success">
-                        User added!
-                    </Alert>
-                }
+            <Panel header={<strong>Add User</strong>}>
                 <Form horizontal>
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Name
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          placeholder={'Name'}
                                          value={this.state.details.name}
@@ -92,10 +79,10 @@ export class AddUser extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Description
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          placeholder={'Description'}
                                          value={this.state.details.description}
@@ -105,10 +92,10 @@ export class AddUser extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             E-Mail
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          placeholder={'E-Mail'}
                                          value={this.state.details.email}
@@ -118,7 +105,7 @@ export class AddUser extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Bitcoin
                         </Col>
                         <Col sm={5}>
@@ -140,7 +127,7 @@ export class AddUser extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Ethereum
                         </Col>
                         <Col sm={5}>
@@ -162,10 +149,10 @@ export class AddUser extends React.Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Col sm={2} componentClass={ControlLabel}>
+                        <Col sm={decriptionWidth} componentClass={ControlLabel}>
                             Transaction Limit
                         </Col>
-                        <Col sm={10}>
+                        <Col sm={fieldsWidth}>
                             <FormControl type="text"
                                          value={this.state.details.transactionLimit}
                                          id='transactionLimit'
@@ -173,7 +160,7 @@ export class AddUser extends React.Component {
                         </Col>
                     </FormGroup>
 
-                    <Button bsStyle="primary" onClick={this.addUser.bind(this)}>
+                    <Button block bsStyle="primary" onClick={this.addUser.bind(this)}>
                         Add User
                     </Button>
                 </Form>
