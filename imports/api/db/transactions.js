@@ -108,6 +108,11 @@ function _processTransaction() {
             }
         }
 
+        if (t.amount > userFrom.transactionLimit) {
+            _invalidateTransaction(id);
+            return;
+        }
+
         Users.changeFunds(t.from, t.currency, -t.amount,
             (e, r) => {
                 if (e) {

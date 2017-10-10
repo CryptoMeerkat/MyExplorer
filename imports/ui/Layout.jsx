@@ -8,7 +8,6 @@ import {
 } from 'react-bootstrap';
 import * as TransactionsAPI from '../api/db/transactions.js';
 import * as UsersAPI from '../api/db/users.js';
-
 import {History} from './History.jsx';
 import {AddUser} from './AddUser.jsx';
 import {AddTransaction} from './AddTransaction.jsx';
@@ -16,7 +15,7 @@ import {Admin} from './Admin.jsx';
 import {Users} from './Users.jsx';
 import Alert from 'react-s-alert';
 
-class App extends Component {
+class Layout extends Component {
     render() {
         return (
             <Grid style={{'padding-top': '20px'}}>
@@ -73,4 +72,4 @@ export default createContainer(() => {
         users: users,
         usersLoaded: usersLoaded
     };
-}, App);
+}, Layout);
