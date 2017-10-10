@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Table, Grid, Row, Panel, Col, FormControl, FormGroup, Form, ControlLabel} from 'react-bootstrap';
+import {Table, Col, FormControl, FormGroup, Form, ControlLabel} from 'react-bootstrap';
 import {Transaction} from './Transaction.jsx';
 
 export class History extends Component {
@@ -29,8 +29,7 @@ export class History extends Component {
         });
 
         return (
-
-            <Panel header={<strong>History</strong>}>
+            <div style={{'padding-top': '20px'}}>
                 <Form horizontal>
                     <FormGroup>
                         <Col sm={2} componentClass={ControlLabel}>
@@ -63,7 +62,7 @@ export class History extends Component {
                     }
                     </tbody>
                 </Table>
-            </Panel>
+            </div>
         );
     }
 }

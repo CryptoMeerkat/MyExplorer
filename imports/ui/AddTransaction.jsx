@@ -41,7 +41,6 @@ export class AddTransaction extends React.Component {
 
             }
         });
-
     }
 
     handleChange(e) {
@@ -106,6 +105,7 @@ export class AddTransaction extends React.Component {
                         <Col sm={fieldsWidth}>
                             <FormControl componentClass="select"
                                          value={this.state.details.currency}
+                                         id='currency'
                                          onChange={this.handleChange.bind(this)}>
                                 <option value="BTC">BTC</option>
                                 <option value="ETH">ETH</option>

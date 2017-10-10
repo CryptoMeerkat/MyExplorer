@@ -90,31 +90,40 @@ function _processTransaction() {
     const t = get(id);
 
     const userFrom = Users.getUserByName(t.from);
+    const userTo = Users.getUserByName(t.to);
 
-    if (t.currency === 'BTC') {
-        if (userFrom.bitcoinAmount < t.amount) {
-            _invalidateTransaction(id);
-        }
-    } else if (t.currency === 'ETH') {
-        if (userFrom.ethereumAmount < t.amount) {
-            _invalidateTransaction(id);
-        }
-    }
+    if (userFrom === undefined || userTo === undefined) {
+        _invalidateTransaction(id);
+    } else {
 
-    Users.changeFunds(t.from, t.currency, -t.amount,
-        (e, r) => {
-            if (e) {
+        if (t.currency === 'BTC') {
+            if (userFrom.bitcoinAmount < t.amount) {
                 _invalidateTransaction(id);
-            } else {
-                Users.changeFunds(t.to, t.currency, t.amount,
-                    (e, r) => {
-                        if (e) {
-                            _invalidateTransaction(id);
-                        } else {
-                            _finaliseTransaction(id);
-                        }
-                    });
+                return;
             }
-        });
+        } else if (t.currency === 'ETH') {
+            if (userFrom.ethereumAmount < t.amount) {
+                _invalidateTransaction(id);
+                return;
+            }
+        }
+
+        Users.changeFunds(t.from, t.currency, -t.amount,
+            (e, r) => {
+                if (e) {
+                    _invalidateTransaction(id);
+                } else {
+                    Users.changeFunds(t.to, t.currency, t.amount,
+                        (e, r) => {
+                            if (e) {
+                                _invalidateTransaction(id);
+                            } else {
+                                _finaliseTransaction(id);
+                            }
+                        });
+                }
+            }
+        );
+    }
 
 }

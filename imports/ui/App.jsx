@@ -4,23 +4,22 @@ import {
     Grid,
     Row,
     Col,
+    Tabs, Tab
 } from 'react-bootstrap';
-import * as Transactions from '../api/db/transactions.js';
+import * as TransactionsAPI from '../api/db/transactions.js';
+import * as UsersAPI from '../api/db/users.js';
 
 import {History} from './History.jsx';
 import {AddUser} from './AddUser.jsx';
 import {AddTransaction} from './AddTransaction.jsx';
+import {Admin} from './Admin.jsx';
+import {Users} from './Users.jsx';
 import Alert from 'react-s-alert';
 
 class App extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
-            <Grid>
+            <Grid style={{'padding-top': '20px'}}>
                 <Row>
                     <Col xs={5}>
                         <Row>
@@ -31,6 +30,21 @@ class App extends Component {
                         </Row>
                     </Col>
                     <Col xs={7}>
+                        <Tabs defaultActiveKey={1} id='defaultTabs'>
+                            <Tab eventKey={1} title={<strong>History</strong>}>
+                                {!this.props.transactionsLoaded ? null :
+                                    <History transactions={this.props.transactions}/>
+                                }
+                            </Tab>
+                            <Tab eventKey={2} title={<strong>Users</strong>}>
+                                {!this.props.usersLoaded ? null :
+                                    <Users users={this.props.users}/>
+                                }
+                            </Tab>
+                            <Tab eventKey={3} title={<strong>Admin</strong>}>
+                                <Admin/>
+                            </Tab>
+                        </Tabs>
                         {!this.props.loaded ? null :
                             <History transactions={this.props.transactions}/>
                         }
@@ -45,11 +59,18 @@ class App extends Component {
 
 export default createContainer(() => {
     const transactionHandle = Meteor.subscribe('transactions');
-    const transactions = Transactions.TransactionCollection.find({}, {sort: {timestampCreated: -1}}).fetch() || [];
-    const loaded = transactionHandle.ready();
+    const transactions = TransactionsAPI.TransactionCollection.find({}, {sort: {timestampCreated: -1}}).fetch() || [];
+    const transactionsLoaded = transactionHandle.ready();
+
+    const usersHandle = Meteor.subscribe('users');
+    const users = UsersAPI.UsersCollection.find({}).fetch() || [];
+    const usersLoaded = usersHandle.ready();
 
     return {
         transactions: transactions,
-        loaded: loaded
+        transactionsLoaded: transactionsLoaded,
+
+        users: users,
+        usersLoaded: usersLoaded
     };
 }, App);

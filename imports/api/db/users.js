@@ -50,14 +50,16 @@ export function addUser(details) {
     const bitcoinId = details.bitcoinId;
     const ethereumId = details.ethereumId;
     const bitcoinAmount = parseFloat(details.bitcoinAmount);
-    const ethereumAmount = parseFloat(details.bitcoinAmount);
+    const ethereumAmount = parseFloat(details.ethereumAmount);
     const transactionLimit = parseFloat(details.transactionLimit);
 
     if (name.length >= 512
         || description.length >= 1024
         || email.length >= 1024
         || bitcoinId.length >= BITCOIN_ID_LENGTH
+        || bitcoinId.length <= 0
         || ethereumId.length >= ETHEREUM_ID_LENGTH
+        || ethereumId.length <= 0
         || bitcoinAmount < 0
         || bitcoinAmount > 1
         || ethereumAmount < 0
