@@ -17,9 +17,9 @@ Have a first glance here: https://www.youtube.com/watch?v=t7cu9TOkMrM
 * Add transactions for users
 * View history transactions
 * Filter transactions for users
-* Clear database for quick restart
+* Admin functions like for clearing database from the web
 * Transaction processor
-** Process transactions in order
-** Full transaction validation
-** Transaction committing and logging
+  * Process transactions in order
+  * Full transaction validation
+  * Transaction committing and logging
 * REACTive update of website with Meteor
