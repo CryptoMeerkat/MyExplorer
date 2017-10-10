@@ -4,7 +4,7 @@ import {Table} from 'react-bootstrap';
 export class Users extends Component {
     render() {
         return (
-            <div style={{'padding-top': '20px'}}>
+            <div style={{'paddingTop': '20px'}}>
                 <Table responsive>
                     <thead>
                     <tr>
@@ -15,8 +15,8 @@ export class Users extends Component {
                     </thead>
                     <tbody>
                     {
-                        this.props.users.map((u) => (
-                            <tr>
+                        this.props.users.map((u, i) => (
+                            <tr key={i}>
                                 <td>{u.name}</td>
                                 <td>{u.bitcoinAmount.toFixed(8)}</td>
                                 <td>{u.ethereumAmount.toFixed(8)}</td>

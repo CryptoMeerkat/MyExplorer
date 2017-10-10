@@ -18,7 +18,7 @@ import Alert from 'react-s-alert';
 class Layout extends Component {
     render() {
         return (
-            <Grid style={{'padding-top': '20px'}}>
+            <Grid style={{'paddingTop': '20px'}}>
                 <Row>
                     <Col xs={5}>
                         <Row>

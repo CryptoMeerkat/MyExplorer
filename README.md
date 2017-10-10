@@ -11,3 +11,15 @@ Have a first glance here: https://www.youtube.com/watch?v=t7cu9TOkMrM
 1. Start the project: `meteor run`
 1. Visit `http://localhost:3000`
 
+# Features
+
+* Add users with BTC and ETH volume
+* Add transactions for users
+* View history transactions
+* Filter transactions for users
+* Clear database for quick restart
+* Transaction processor
+** Process transactions in order
+** Full transaction validation
+** Transaction committing and logging
+* REACTive update of website with Meteor

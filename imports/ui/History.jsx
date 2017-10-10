@@ -29,7 +29,7 @@ export class History extends Component {
         });
 
         return (
-            <div style={{'padding-top': '20px'}}>
+            <div style={{'paddingTop': '20px'}}>
                 <Form horizontal>
                     <FormGroup>
                         <Col sm={2} componentClass={ControlLabel}>

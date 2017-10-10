@@ -31,7 +31,7 @@ export class Admin extends Component {
 
     render() {
         return (
-            <div style={{'padding-top': '20px'}}>
+            <div style={{'paddingTop': '20px'}}>
                 <Button block bsStyle="primary" onClick={this.removeAllUsers.bind(this)}>
                     Remove all users
                 </Button>

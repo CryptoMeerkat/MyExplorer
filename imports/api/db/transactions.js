@@ -4,13 +4,16 @@ import {check} from 'meteor/check';
 import {Meteor} from 'meteor/meteor';
 import * as Users from "./users.js";
 
+import * as TransactionProcessor from "../transactionProcessor.js";
+
+
 export const TransactionCollection = new Mongo.Collection('transactions');
 
 export function findAll() {
     return TransactionCollection.find({});
 }
 
-export function get(id) {
+export function getById(id) {
     return TransactionCollection.findOne({_id: id});
 }
 
@@ -21,9 +24,6 @@ export const STATE = {
     INVALID: "INVALID",
 };
 
-// Concurrency issues: Adding and fetching in different scopes.
-// Maybe no issue, due to JS one core principle
-const transactionsToProcess = [];
 
 export function add(transaction) {
     check(transaction.from, String);
@@ -56,79 +56,8 @@ export function add(transaction) {
             if (err) {
                 throw Meteor.Error('Unsubmitted Transaction');
             } else {
-                transactionsToProcess.push(res);
-                Meteor.setTimeout(_processTransaction, 2500);
+                TransactionProcessor.push(res);
             }
         }
     );
-}
-
-function _invalidateTransaction(id) {
-    TransactionCollection.update({
-        _id: id
-    }, {
-        $set: {
-            timestampProcessed: moment().toDate(),
-            state: STATE.INVALID
-        }
-    });
-}
-
-function _finaliseTransaction(id) {
-    TransactionCollection.update({
-        _id: id
-    }, {
-        $set: {
-            timestampProcessed: moment().toDate(),
-            state: STATE.DONE
-        }
-    });
-}
-
-function _processTransaction() {
-    const id = transactionsToProcess.shift();
-    const t = get(id);
-
-    const userFrom = Users.getUserByName(t.from);
-    const userTo = Users.getUserByName(t.to);
-
-    if (userFrom === undefined || userTo === undefined) {
-        _invalidateTransaction(id);
-    } else {
-
-        if (t.currency === 'BTC') {
-            if (userFrom.bitcoinAmount < t.amount) {
-                _invalidateTransaction(id);
-                return;
-            }
-        } else if (t.currency === 'ETH') {
-            if (userFrom.ethereumAmount < t.amount) {
-                _invalidateTransaction(id);
-                return;
-            }
-        }
-
-        if (t.amount > userFrom.transactionLimit) {
-            _invalidateTransaction(id);
-            return;
-        }
-
-        Users.changeFunds(t.from, t.currency, -t.amount,
-            (e, r) => {
-                if (e) {
-                    _invalidateTransaction(id);
-                } else {
-                    Users.changeFunds(t.to, t.currency, t.amount,
-                        (e, r) => {
-                            if (e) {
-                                _invalidateTransaction(id);
-                            } else {
-                                _finaliseTransaction(id);
-                            }
-                        });
-                }
-            }
-        );
-    }
-
 }
